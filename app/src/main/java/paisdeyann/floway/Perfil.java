@@ -47,6 +47,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.soundcloud.android.crop.Crop;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -114,6 +115,12 @@ public class Perfil extends AppCompatActivity implements View.OnClickListener{
 
 
         fotoPerfil = (ImageView) findViewById(R.id.imageView2);
+        Picasso.with(this).load(Conexion.usuarioActivo.getFoto()).resize(100,100).centerCrop().transform(new CircleTransform()).into(fotoPerfil);
+
+
+
+
+
         textViewNombre = (TextView) findViewById(R.id.textViewNombrePerfil);
         textViewUsuario = (TextView) findViewById(R.id.textViewUsuarioPerfil);
         imagen = (ImageView) findViewById(R.id.imageView2);
@@ -136,6 +143,8 @@ public class Perfil extends AppCompatActivity implements View.OnClickListener{
         textViewPoblacion.setText(usuario.getPoblacion());
         textViewCodigoPostalPerfil.setText(usuario.getCp());
         textViewHorarioPerfil.setText(usuario.getHorario());
+/*
+        thread que usaba antes, ahora con picasso lo hace mejor
 
         Object[] objetos = new Object[3];
         objetos[0] = fotoPerfil;
@@ -144,7 +153,7 @@ public class Perfil extends AppCompatActivity implements View.OnClickListener{
 
         PonerFotoEnUnImageView myThread = new PonerFotoEnUnImageView();
         myThread.execute(objetos);
-
+*/
 
         if(Conexion.usuarioActivo.getId_usuario() == usuario.getId_usuario()){
 

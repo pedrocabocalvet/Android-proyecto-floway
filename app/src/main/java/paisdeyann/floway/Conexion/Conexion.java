@@ -13,7 +13,6 @@ import paisdeyann.floway.Objetos.Usuario;
 
 public class Conexion {
 
-   //public static final String SERVER = "http://192.168.1.131";
 
     public static final String SERVER = "http://54.93.101.246";
 

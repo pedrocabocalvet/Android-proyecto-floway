@@ -62,12 +62,13 @@ public class AdaptadorGrupoMensajes extends RecyclerView.Adapter<AdaptadorGrupoM
 
        // Log.d("prueba","estoy en el adaptador " +id);
 
-        Object[] objetos = new Object[5];
+        Object[] objetos = new Object[6];
         objetos[0] = contexto;
         objetos[1] = id;
         objetos[2] = holder.textViewNombre;
         objetos[3] = holder.textViewFecha;
         objetos[4] = conversaciones.get(position).getFecha();
+        objetos[5] = holder.foto;
 
         ConseguirUsuarioPorId myThread = new ConseguirUsuarioPorId();
         myThread.execute(objetos);
@@ -75,6 +76,8 @@ public class AdaptadorGrupoMensajes extends RecyclerView.Adapter<AdaptadorGrupoM
         // 0 contexto
         // 1 id del usuario q queremos coger la foto
         // 2 imageView donde va la foto
+/*
+        // voy a intentar meter todo en el Thread de arriba
 
         Object[] objetos2 = new Object[3];
         objetos2[0] = contexto;
@@ -83,7 +86,7 @@ public class AdaptadorGrupoMensajes extends RecyclerView.Adapter<AdaptadorGrupoM
 
         ConseguirImagenConIdYPonerEnImageView myOtroThread = new ConseguirImagenConIdYPonerEnImageView();
         myOtroThread.execute(objetos2);
-
+*/
         //holder.textViewNombre.setText(""+id);
 
     }

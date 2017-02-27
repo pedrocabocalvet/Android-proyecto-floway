@@ -135,7 +135,7 @@ public class Registro3 extends AppCompatActivity {
                 }).setNegativeButton("Galeria", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        Log.d("prueba2","has apretado el boton galeria me voy a abrir galeria");
+
                        // Crop.pickImage(activity);
                         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

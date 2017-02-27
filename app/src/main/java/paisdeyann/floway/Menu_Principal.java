@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -105,6 +106,8 @@ public class Menu_Principal extends AppCompatActivity
         ImageView imagen = (ImageView) v.findViewById(R.id.imageView);
         TextView textoNombre = (TextView) v.findViewById(R.id.textViewNombreNavigation);
         TextView textoApellidos = (TextView) v.findViewById(R.id.textViewApellidosNavigation);
+/*
+        // este thread a sido sustituido por Picasso que hace lo mismo
 
         Object[] objetos = new Object[3];
         objetos[0] = imagen;
@@ -113,11 +116,14 @@ public class Menu_Principal extends AppCompatActivity
 
         PonerFotoEnUnImageView myThreadFoto = new PonerFotoEnUnImageView();
         myThreadFoto.execute(objetos);
+*/
+
+        Picasso.with(this).load(Conexion.usuarioActivo.getFoto()).resize(100,100).centerCrop().transform(new CircleTransform()).into(imagen);
 
         v.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("prueba","llego hasta aki para mandar un usuario");
+
                 Intent intent = new Intent(Menu_Principal.this,Perfil.class);
                 Bundle bundle = new Bundle();
                 Log.d("prueba","voy a mandar a "+Conexion.usuarioActivo.getNombre());

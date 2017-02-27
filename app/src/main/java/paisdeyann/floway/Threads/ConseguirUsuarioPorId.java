@@ -6,12 +6,14 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import paisdeyann.floway.CircleTransform;
 import paisdeyann.floway.Conexion.Conexion;
 import paisdeyann.floway.Objetos.Usuario;
 
@@ -34,6 +37,8 @@ public class ConseguirUsuarioPorId extends AsyncTask<Object,Object,Object> {
     int usuarioComprobar;
     Usuario usuarioCogerNombre;
 
+    ImageView foto;
+
     @Override
     protected Object doInBackground(Object... params) {
 
@@ -45,8 +50,11 @@ public class ConseguirUsuarioPorId extends AsyncTask<Object,Object,Object> {
         [3] = holder.textViewFecha;
         [4] = conversaciones.get(position).getFecha();
 
+        [5] = imageview foto
+
 
          */
+        foto = (ImageView) params[5];
 
         contexto = (Context)params[0];
         usuarioComprobar = (int)params[1];
@@ -73,6 +81,7 @@ public class ConseguirUsuarioPorId extends AsyncTask<Object,Object,Object> {
         super.onPostExecute(o);
         Log.d("prueba","estoy llegando y pongo el nombre de "+usuarioCogerNombre.getNombre()+" "+usuarioCogerNombre.getApellidos());
         ((TextView)o).setText(usuarioCogerNombre.getNombre()+" "+usuarioCogerNombre.getApellidos());
+        Picasso.with(contexto).load(usuarioCogerNombre.getFoto()).resize(250,250).centerCrop().transform(new CircleTransform()).into(foto);
 
     }
 
