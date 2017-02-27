@@ -115,7 +115,7 @@ public class Perfil extends AppCompatActivity implements View.OnClickListener{
 
 
         fotoPerfil = (ImageView) findViewById(R.id.imageView2);
-        Picasso.with(this).load(Conexion.usuarioActivo.getFoto()).resize(100,100).centerCrop().transform(new CircleTransform()).into(fotoPerfil);
+        Picasso.with(this).load(usuario.getFoto()).resize(100,100).centerCrop().transform(new CircleTransform()).into(fotoPerfil);
 
 
 
