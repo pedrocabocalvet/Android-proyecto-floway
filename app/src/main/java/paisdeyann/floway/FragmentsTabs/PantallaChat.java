@@ -31,6 +31,7 @@ import paisdeyann.floway.Conexion.Conexion;
 import paisdeyann.floway.Menu_Principal;
 import paisdeyann.floway.Objetos.Conversacion;
 import paisdeyann.floway.Objetos.Mensaje;
+import paisdeyann.floway.Objetos.Privado;
 import paisdeyann.floway.R;
 
 
@@ -47,7 +48,8 @@ public class PantallaChat extends Fragment {
     private Firebase mFirebase;
     private FirebaseAuth firebaseAuth;
 
-    ArrayList<Conversacion> conversaciones = new ArrayList<Conversacion>();
+    //ArrayList<Conversacion> conversaciones = new ArrayList<Conversacion>();
+    ArrayList<Privado> conversaciones = new ArrayList<Privado>();
 
     public PantallaChat() {
         // Required empty public constructor
@@ -69,14 +71,7 @@ public class PantallaChat extends Fragment {
         Firebase.setAndroidContext(context);
 
 
-/*
-        for (Conversacion conversacion:activity.getConversaciones()) {
 
-            Log.d("prueba","desde pantalla chat "+conversacion.getChat());
-
-        }
-        Log.d("prueba","hiiiii salgo");
-*/
         rv = (RecyclerView) rootView.findViewById(R.id.recyclerViewMensajes);
         rvLM = new LinearLayoutManager(context);
         rv.setLayoutManager(rvLM);
@@ -87,8 +82,11 @@ public class PantallaChat extends Fragment {
         rv.setAdapter(adaptador);
 
 
+        mFirebase = new Firebase("https://flowaychatviajes.firebaseio.com").child("Privados/"+Conexion.usuarioActivo.getId_usuario());
+        //mFirebase = new Firebase("https://flowaychatviajes.firebaseio.com").child("Conversaciones");
 
-        mFirebase = new Firebase("https://flowaychatviajes.firebaseio.com").child("Conversaciones");
+
+
         mFirebase.addChildEventListener(new ChildEventListener() {
 
             @Override
@@ -96,22 +94,19 @@ public class PantallaChat extends Fragment {
             public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
 
                 if (dataSnapshot != null && dataSnapshot.getValue() != null){
+
                     try {
 
-                        Conversacion model = dataSnapshot.getValue(Conversacion.class);
-
-                        Log.d("prueba","voy a añadir una nueva conversacion "+model.getFecha()+" "+model.getId1()+" "+model.getChat());
-
-                        if(Conexion.usuarioActivo.getId_usuario() == model.getId1() || Conexion.usuarioActivo.getId_usuario() == model.getId2()){
-                            conversaciones.add(model);
-                        }
-
-
-
-                        rv.scrollToPosition(conversaciones.size()-1);
+                        Privado model = dataSnapshot.getValue(Privado.class);
+                        Log.d("prueba10","voy a añadir una nueva conversacion "+model.getFecha()+" "+model.getNombreChat()+" "+model.getIdConversando());
+                        conversaciones.add(model);
+                       rv.scrollToPosition(conversaciones.size()-1);
                         adaptador.notifyItemInserted(conversaciones.size()-1);
 
+
+
                     }catch(Exception e){
+                        Log.d("prueba10","entro yo aki alguna vez?");
                         e.printStackTrace();
                     }
                 }
@@ -138,6 +133,46 @@ public class PantallaChat extends Fragment {
 
             }
         });
+
+
+
+
+
+        DatabaseReference conversacionesBBDD = FirebaseDatabase.getInstance().getReference().child("Privados/"+Conexion.usuarioActivo.getId_usuario());
+
+        conversacionesBBDD.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                Iterator i = dataSnapshot.getChildren().iterator();
+
+                while (i.hasNext()){
+
+                    Privado c = ((DataSnapshot) i.next()).getValue(Privado.class);
+                    Log.d("prueba10","añado lo de abajo ");
+                    c.imprimir();
+                    conversaciones.add(c);
+                    rv.scrollToPosition(conversaciones.size()-1);
+                    adaptador.notifyItemInserted(conversaciones.size()-1);
+
+                    if(conversaciones.isEmpty()){
+                        Log.d("prueba10","el array esta vacio");
+                    }
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
 
         return rootView;
     }

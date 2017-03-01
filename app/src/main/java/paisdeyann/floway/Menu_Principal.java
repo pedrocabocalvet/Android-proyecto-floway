@@ -55,6 +55,7 @@ import paisdeyann.floway.FragmentsTabs.MapViewFragment;
 import paisdeyann.floway.FragmentsTabs.PantallaChat;
 import paisdeyann.floway.FragmentsTabs.PantallaTransacciones;
 import paisdeyann.floway.Objetos.Conversacion;
+import paisdeyann.floway.Objetos.Privado;
 import paisdeyann.floway.Objetos.Transaccion;
 import paisdeyann.floway.Threads.PonerFotoEnUnImageView;
 
@@ -73,8 +74,8 @@ public class Menu_Principal extends AppCompatActivity
 
     ImageView imagenCabeceraNavigationDrawer;
 
-
-    ArrayList<Conversacion> conversaciones = new ArrayList<Conversacion>();
+    ArrayList<Privado> conversaciones = new ArrayList<Privado>();
+    //ArrayList<Conversacion> conversaciones = new ArrayList<Conversacion>();
 
     ArrayList<Transaccion> transaccions = new ArrayList<Transaccion>();
 
@@ -88,17 +89,6 @@ public class Menu_Principal extends AppCompatActivity
         Log.d("prueba","empiezo el menu_principal");
 
 
-        /*
-        imagenCabeceraNavigationDrawer = (ImageView) findViewById(R.id.imageView);
-
-        Object[] objetos = new Object[3];
-        objetos[0] = imagenCabeceraNavigationDrawer;
-        objetos[1] = Conexion.usuarioActivo.getFoto();
-        objetos[2] = getApplicationContext();
-
-        PonerFotoEnUnImageView myThreadFoto = new PonerFotoEnUnImageView();
-        myThreadFoto.execute(objetos);
-*/
         NavigationView navigation;
 
         navigation = (NavigationView) findViewById(R.id.nav_view);
@@ -106,17 +96,7 @@ public class Menu_Principal extends AppCompatActivity
         ImageView imagen = (ImageView) v.findViewById(R.id.imageView);
         TextView textoNombre = (TextView) v.findViewById(R.id.textViewNombreNavigation);
         TextView textoApellidos = (TextView) v.findViewById(R.id.textViewApellidosNavigation);
-/*
-        // este thread a sido sustituido por Picasso que hace lo mismo
 
-        Object[] objetos = new Object[3];
-        objetos[0] = imagen;
-        objetos[1] = Conexion.usuarioActivo.getFoto();
-        objetos[2] = getApplicationContext();
-
-        PonerFotoEnUnImageView myThreadFoto = new PonerFotoEnUnImageView();
-        myThreadFoto.execute(objetos);
-*/
 
         Picasso.with(this).load(Conexion.usuarioActivo.getFoto()).resize(100,100).centerCrop().transform(new CircleTransform()).into(imagen);
 
@@ -151,9 +131,9 @@ public class Menu_Principal extends AppCompatActivity
         transacciones = new PantallaTransacciones();
         transacciones.setContext(getApplicationContext(),this);
 
-        //------ArrayMensajes------------------------------------------------------
 
-        DatabaseReference conversacionesBBDD = FirebaseDatabase.getInstance().getReference().child("Conversaciones");
+
+        DatabaseReference conversacionesBBDD = FirebaseDatabase.getInstance().getReference().child("Privados/"+Conexion.usuarioActivo.getId_usuario());
 
 
         conversacionesBBDD.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -165,20 +145,15 @@ public class Menu_Principal extends AppCompatActivity
 
                 while (i.hasNext()){
 
-                    Conversacion c = ((DataSnapshot) i.next()).getValue(Conversacion.class);
-                   // Log.d("prueba","estoy al principio "+c.getChat()+" "+c.getId1()+" "+c.getId2());
+                    Privado c = ((DataSnapshot) i.next()).getValue(Privado.class);
+                     Log.d("prueba10","recupero en el array convesaciones menuprincipal ");
+                    c.imprimir();
+                    conversaciones.add(c);
 
                     if(conversaciones.isEmpty()){
                         Log.d("prueba","el array esta vacio");
                     }
 
-                   // Log.d("prueba","yo "+Conexion.usuarioActivo.getNombre()+" con id "+Conexion.usuarioActivo.getId_usuario()+" voy a coger todos mis chats por eso compruebo si estoy en "+c.getId1()+" o en "+c.getId2());
-                    if(Conexion.usuarioActivo.getId_usuario() == c.getId1() || Conexion.usuarioActivo.getId_usuario() == c.getId2()){
-
-
-                        conversaciones.add(c);
-
-                    }
 
                 }
 
@@ -190,8 +165,6 @@ public class Menu_Principal extends AppCompatActivity
 
             }
         });
-
-
 
 
         //------Seccion Navigation---------------------------------------------------
@@ -375,17 +348,31 @@ public class Menu_Principal extends AppCompatActivity
     }
 
     /* getters y setters array mensajes --*/
-    public ArrayList<Conversacion> getConversaciones() {
+ /*   public ArrayList<Conversacion> getConversaciones() {
         return conversaciones;
     }
 
     public void setConversaciones(ArrayList<Conversacion> conversaciones) {
         this.conversaciones = conversaciones;
     }
+*/
+    public ArrayList<Privado> getConversaciones() {
+        return conversaciones;
+    }
 
-    public void addConversacion(Conversacion c){
+    public void setConversaciones(ArrayList<Privado> conversaciones) {
+        this.conversaciones = conversaciones;
+    }
+  /*  public void addConversacion(Conversacion c){
         conversaciones.add(c);
     }
+
+    */
+
+    public void addConversacion(Privado c){
+        conversaciones.add(c);
+    }
+
     /* hasta aki --*/
 
     //animaciones

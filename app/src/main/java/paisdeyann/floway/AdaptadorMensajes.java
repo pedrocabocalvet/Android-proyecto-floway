@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import paisdeyann.floway.Conexion.Conexion;
 import paisdeyann.floway.Objetos.Mensaje;
 import paisdeyann.floway.Threads.ConseguirUsuarioPorId;
+import paisdeyann.floway.Threads.ConseguirUsuarioPorIdSinFoto;
 
 /**
  * Created by caboc on 15/02/2017.
@@ -53,7 +54,7 @@ public class AdaptadorMensajes  extends RecyclerView.Adapter<AdaptadorMensajes.A
             objetos[3] = holder.fecha;
             objetos[4] = mensajes.get(position).getFecha();
 
-            ConseguirUsuarioPorId myThread = new ConseguirUsuarioPorId();
+            ConseguirUsuarioPorIdSinFoto myThread = new ConseguirUsuarioPorIdSinFoto();
             myThread.execute(objetos);
         }
 

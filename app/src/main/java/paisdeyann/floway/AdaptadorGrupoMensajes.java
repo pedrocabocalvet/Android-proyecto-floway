@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import paisdeyann.floway.Conexion.Conexion;
 import paisdeyann.floway.Objetos.Conversacion;
+import paisdeyann.floway.Objetos.Privado;
 import paisdeyann.floway.Threads.ConseguirImagenConIdYPonerEnImageView;
 import paisdeyann.floway.Threads.ConseguirUsuarioPorId;
 
@@ -29,13 +30,15 @@ import paisdeyann.floway.Threads.ConseguirUsuarioPorId;
 
 public class AdaptadorGrupoMensajes extends RecyclerView.Adapter<AdaptadorGrupoMensajes.AdaptadorGrupoMensajesViewHolder>{
 
-    ArrayList<Conversacion> conversaciones;
+    ArrayList<Privado> conversaciones;
     Context contexto;
 
-    public AdaptadorGrupoMensajes(ArrayList<Conversacion> conversaciones, Context contexto){
+    public AdaptadorGrupoMensajes(ArrayList<Privado> conversaciones, Context contexto){
 
         this.conversaciones = conversaciones;
         this.contexto = contexto;
+
+        Log.d("prueba10","llego al adaptador de mensajes");
 
     }
 
@@ -50,16 +53,12 @@ public class AdaptadorGrupoMensajes extends RecyclerView.Adapter<AdaptadorGrupoM
     public void onBindViewHolder(AdaptadorGrupoMensajesViewHolder holder, int position) {
 
         holder.textViewFecha.setText(conversaciones.get(position).getFecha());
-        holder.chat = conversaciones.get(position).getChat();
+        holder.chat = conversaciones.get(position).getNombreChat();
 
         int id;
 
-        if(conversaciones.get(position).getId1() != Conexion.usuarioActivo.getId_usuario()){
-            id = conversaciones.get(position).getId1();
-        }else{
-            id = conversaciones.get(position).getId2();
-        }
-
+        id = conversaciones.get(position).getIdConversando();
+        holder.idConversando = conversaciones.get(position).getIdConversando();
        // Log.d("prueba","estoy en el adaptador " +id);
 
         Object[] objetos = new Object[6];
@@ -103,6 +102,8 @@ public class AdaptadorGrupoMensajes extends RecyclerView.Adapter<AdaptadorGrupoM
         View view;
         ImageView foto;
         String chat;
+        int idConversando;
+
 
         public AdaptadorGrupoMensajesViewHolder(View itemView) {
             super(itemView);
@@ -126,7 +127,7 @@ public class AdaptadorGrupoMensajes extends RecyclerView.Adapter<AdaptadorGrupoM
 
             intent.putExtra("bundle",bundle);
             intent.putExtra("nombre",textViewNombre.getText().toString());
-
+            intent.putExtra("idConversando",idConversando);
 /*
             BitmapDrawable drawable = (BitmapDrawable) foto.getDrawable();
             Bitmap bitmap = drawable.getBitmap();

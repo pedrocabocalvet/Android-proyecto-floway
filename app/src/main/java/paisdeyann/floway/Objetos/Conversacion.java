@@ -1,5 +1,7 @@
 package paisdeyann.floway.Objetos;
 
+import android.util.Log;
+
 /**
  * Created by caboc on 16/02/2017.
  */
@@ -56,4 +58,6 @@ public class Conversacion {
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
+
+
 }

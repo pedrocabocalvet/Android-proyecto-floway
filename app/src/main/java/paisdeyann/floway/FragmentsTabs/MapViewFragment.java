@@ -57,6 +57,7 @@ import paisdeyann.floway.MainActivity;
 import paisdeyann.floway.Mensajes;
 import paisdeyann.floway.Menu_Principal;
 import paisdeyann.floway.Objetos.Conversacion;
+import paisdeyann.floway.Objetos.Privado;
 import paisdeyann.floway.Objetos.Usuario;
 import paisdeyann.floway.Perfil;
 import paisdeyann.floway.R;
@@ -495,22 +496,27 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
                 String nombreMarca = marker.getTitle();
 
-                Log.d("prueba2","le doy a enviar mensaje");
-                Log.d("prueba2","tengo maraca "+idMarcaPuntoMarcado);
-
+/*
                 for(Conversacion conversacion: activity.getConversaciones()){
-                    Log.d("prueba2","recorro el array"+conversacion.getChat());
-                    Log.d("prueba","recorriendo el array "+conversacion.getChat());
 
                     if(conversacion.getId1() == idMarcaPuntoMarcado || conversacion.getId2() == idMarcaPuntoMarcado){
                         chatRepetido = true;
                         chatUsado = conversacion.getChat();
-                        Log.d("prueba2","cojo el chat "+chatUsado+" pq esta repetido por ciero es el id"+idMarcaPuntoMarcado);
                     }
 
                 }
-
+*/
                 //Toast.makeText(context, "HAS DADO A ENVIAR MENSAJE", Toast.LENGTH_SHORT).show();
+
+                for(Privado conversacion: activity.getConversaciones()){
+
+                    if(conversacion.getIdConversando() == idMarcaPuntoMarcado){
+                        Log.d("prueba10","chatRepetido");
+                        chatRepetido = true;
+                        chatUsado = conversacion.getNombreChat();
+                    }
+
+                }
 
 
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -522,15 +528,12 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 mensaje = mensaje.replace(".","");
 
 
-                //Log.d("prueba2","datos de salida "+chatUsado);
-                Log.d("prueba2","llego");
 
                 if(chatRepetido){
-
+/*
                     Bundle bundle = new Bundle();
                     bundle.putString("chat",chatUsado);
-                   // bundle.putString("nombre","pepe");
-                    Log.d("prueba2","chat usadoooooo:   "+chatUsado);
+
                     chatUsado = "";
 
                     Intent intent = new Intent(getContext(),Mensajes.class);
@@ -539,8 +542,22 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                     getContext().startActivity(intent);
 
                     chatRepetido = false;
+*/
+                    Bundle bundle = new Bundle();
+                    bundle.putString("chat",chatUsado);
+
+                    chatUsado = "";
+
+                    Intent intent = new Intent(getContext(),Mensajes.class);
+                    intent.putExtra("bundle",bundle);
+                    intent.putExtra("nombre",nombreMarca);
+                    intent.putExtra("idConversando",idMarcaPuntoMarcado);
+                    getContext().startActivity(intent);
+
+                    chatRepetido = false;
 
                 }else{
+/*
                     Log.d("prueba2","chat no usado creo uno nuevo");
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRefChat = database.getReference("chats");
@@ -549,14 +566,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                     myRefChat.child(mensaje+"chat").child("nombre1").setValue(Conexion.usuarioActivo.getNombre()+ " "+Conexion.usuarioActivo.getApellidos());
                     myRefChat.child(mensaje+"chat").child("nombre2").setValue(marker.getTitle());
 
-                    //FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    /*
-                    DatabaseReference myRefChat2 = database.getReference("Conversaciones");
-                    myRefChat2.child(mensaje+"conversacion").child("id1").setValue(Integer.parseInt(idMarca));
-                    myRefChat2.child(mensaje+"conversacion").child("id2").setValue(Conexion.usuarioActivo.getId_usuario());
-                    myRefChat2.child(mensaje+"conversacion").child("chat").setValue(mensaje+"chat");
-                    myRefChat2.child(mensaje+"conversacion").child("fecha").setValue(""+timestamp);
-                    */
+
 
                     Firebase mFirebase;
                     mFirebase = new Firebase("https://flowaychatviajes.firebaseio.com").child("Conversaciones");
@@ -574,6 +584,31 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                     intent.putExtra("bundle",bundle);
                     intent.putExtra("nombre",nombreMarca);
                     getContext().startActivity(intent);
+*/
+
+                    Firebase mFirebase;
+                    mFirebase = new Firebase("https://flowaychatviajes.firebaseio.com").child("Privados/"+Conexion.usuarioActivo.getId_usuario());
+
+
+                    Privado privado = new Privado(Integer.parseInt(idMarca),marker.getTitle(),Conexion.usuarioActivo.getId_usuario(),Conexion.usuarioActivo.getNombre(),""+timestamp,mensaje+"chat");
+                    mFirebase.child(mensaje+"chat").setValue(privado);
+
+                    Firebase mFirebase2;
+                    mFirebase2 = new Firebase("https://flowaychatviajes.firebaseio.com").child("Privados/"+Integer.parseInt(idMarca));
+
+                    privado = new Privado(Conexion.usuarioActivo.getId_usuario(),Conexion.usuarioActivo.getNombre(),Integer.parseInt(idMarca),marker.getTitle(),""+timestamp,mensaje+"chat");
+                    mFirebase2.child(mensaje+"chat").setValue(privado);
+
+                    activity.addConversacion(new Privado(Integer.parseInt(idMarca),marker.getTitle(),Conexion.usuarioActivo.getId_usuario(),Conexion.usuarioActivo.getNombre(),""+timestamp,mensaje+"chat"));
+                    Bundle bundle = new Bundle();
+                    bundle.putString("chat",mensaje+"chat");
+
+                    Intent intent = new Intent(getContext(),Mensajes.class);
+                    intent.putExtra("bundle",bundle);
+                    intent.putExtra("nombre",nombreMarca);
+                    intent.putExtra("idConversando",idMarcaPuntoMarcado);
+                    getContext().startActivity(intent);
+
 
                 }
 

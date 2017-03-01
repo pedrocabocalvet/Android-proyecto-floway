@@ -62,7 +62,7 @@ public class Mensajes extends AppCompatActivity {
     Context contexto;
 
 
-
+    int idUsuarioConversando;
 
 
 
@@ -171,24 +171,13 @@ public class Mensajes extends AppCompatActivity {
         TextView nombre = (TextView) findViewById(R.id.header);
         nombre.setText(getIntent().getStringExtra("nombre"));
 
+        // el 3 es inventado para que le ponga un valor por defecto, pero no sirve de nada pq siempre q llegue aki tendra valor
+        idUsuarioConversando = getIntent().getIntExtra("idConversando",3);
+
         nombreConversando = nombre.getText().toString();
 
-/*
-        imagen.post(new Runnable() {
-            @Override
-            public void run() {
-                byte[] a = getIntent().getByteArrayExtra("imagen");
-                Bitmap bmp = BitmapFactory.decodeByteArray( a, 0, a.length);
-                RoundedBitmapDrawable roundDrawable = RoundedBitmapDrawableFactory.create(getResources(), bmp);
-                roundDrawable.setCircular(true);
-                imagen.setImageDrawable(roundDrawable);
 
-            }
-        });
 
-*/
-
-        Log.d("prueba","llego a mensajes");
 
         mId = Settings.Secure.getString(this.getContentResolver(),Settings.Secure.ANDROID_ID);
       //  Log.d("prueba","el mid es :"+mId);
@@ -211,7 +200,9 @@ public class Mensajes extends AppCompatActivity {
         recyclerView.setAdapter(adaptador);
         Firebase.setAndroidContext(this);
 
-        mFirebase = new Firebase("https://flowaychatviajes.firebaseio.com/chats").child(chat+"/mensajes");
+
+        mFirebase = new Firebase("https://flowaychatviajes.firebaseio.com/Privados/"+Conexion.usuarioActivo.getId_usuario()).child(chat+"/mensajes");
+        final Firebase mFirebase2 = new Firebase("https://flowaychatviajes.firebaseio.com/Privados/"+idUsuarioConversando).child(chat+"/mensajes");
 
         añadirMensaje.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,6 +211,7 @@ public class Mensajes extends AppCompatActivity {
                     // creara una instacia hacia firebase insertando el mensaje sobre la clave del autor (email)
                     Mensaje mensaje = new Mensaje(editTextMensajes.getText().toString(), "" + new Timestamp(System.currentTimeMillis()), Conexion.usuarioActivo.getId_usuario());
                     mFirebase.push().setValue(mensaje);
+                    mFirebase2.push().setValue(mensaje);
                     // vaciar texto
                     editTextMensajes.setText("");
                 }
@@ -231,7 +223,7 @@ public class Mensajes extends AppCompatActivity {
             @Override
 
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("prueba","llego al listener de firebase");
+
                 if (dataSnapshot != null && dataSnapshot.getValue() != null){
                     try {
                         Mensaje model = dataSnapshot.getValue(Mensaje.class);
@@ -267,7 +259,6 @@ public class Mensajes extends AppCompatActivity {
 
             }
         });
-
 
 
 
